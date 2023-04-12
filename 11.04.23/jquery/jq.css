@@ -1,0 +1,11 @@
+.sec1 {
+  border: 1px solid black;
+  width: 200px;
+  background-color: yellow;
+}
+
+.sec2 {
+  border: 1px solid black;
+  width: 200px;
+  background-color: rgb(177, 177, 45);
+}

@@ -106,32 +106,4 @@ class adminController extends Controller
             }
         }
     }
-    // function updateUser(Request $req, $id)
-    // {
-    //     $req->validate([
-    //         "name" => 'required',
-    //         "age" => 'required',
-    //         "hobbies" => 'required',
-    //         "sex" => 'required',
-    //         "class" => 'required',
-    //     ]);
-
-    //     $user =  Form::find($id);
-    //     if ($user) {
-
-    //         $user->name = $req->name;
-    //         $user->age = $req->age;
-    //         $user->hobbies = json_encode($req->hobbies);
-    //         $user->sex = $req->sex;
-    //         $user->class = $req->class;
-    //         $user->update();
-    //         return response()->json(['status' => 200, 'message' => "updated Successfully"]);
-    //     } else {
-    //         return response()->json([
-    //             'status' => 400,
-    //             "message" => "not updated",
-
-    //         ]);
-    //     }
-    // }
 }

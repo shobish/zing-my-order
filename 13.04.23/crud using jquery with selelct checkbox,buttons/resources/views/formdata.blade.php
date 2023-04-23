@@ -386,7 +386,7 @@
 
 
                 } else {
-                    $("#response").html("<div class='alert alert-success close'>" + response.message + "</div>");
+                    $("#response").html("<div class='alert alert-success close'>" + response.message + '</div>');
                     $('#exampleModal').modal('hide');
                     getStudent();
 

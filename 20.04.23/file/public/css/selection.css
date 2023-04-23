@@ -1,0 +1,35 @@
+.form-container {
+    background-color: rgb(208, 205, 205);
+}
+
+.form-group input {
+    width: 450px;
+    align-content: center;
+
+    margin: 0;
+}
+.form-select {
+    width: 450px;
+    align-content: center;
+    margin: 0;
+}
+.form-group-select {
+    margin-bottom: 10px;
+}
+form {
+    align-items: center;
+    justify-content: center;
+    padding-left: 80px;
+}
+.form-container {
+    margin-bottom: 5px;
+}
+.non {
+    display: none;
+}
+.modal-content {
+    width: 800px;
+}
+.tableContainer {
+    margin-left: -77px;
+}

@@ -5,16 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class selection extends Model
+class category extends Model
 {
     use HasFactory;
-    protected $protect = [
-        "name",
-        "address",
+    protected $protected = [
         "category",
         "pname",
         "pdes",
         "pprice",
-
     ];
 }

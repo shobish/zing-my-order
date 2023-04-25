@@ -3,42 +3,58 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\selectionModel;
+use App\Models\category;
 use Illuminate\Support\Facades\Validator;
 use League\CommonMark\Node\Block\Document;
 
 class selectionController extends Controller
 {
+    public $product = [];
+    public $lengthflag = [];
+
+
     public function fromDb()
     {
-        $data = selectionModel::all();
+        $data = category::all();
         return view('page.selection', ["data" => $data]);
     }
     public function addSelection(Request $req)
     {
 
         $validator = Validator::make($req->all(), [
-            "name" => "required",
-            "address" => "required",
+
             "category" => "required",
             "pname" => "required",
             "pdes" => "required",
             "pprice" => "required",
+
         ]);
+
         if ($validator->fails()) {
             return response()->json([
                 "status" => 400,
                 "error" => $validator->messages(),
             ]);
         }
-        $document = new selectionModel();
-        $document->name = $req->name;
-        $document->address = $req->address;
+        $name = $req->pname;
+        $des = $req->pdes;
+        $price = $req->pprice;
+
+        $productList = [];
+        foreach ($name as $key => $data) {
+            $products = [];
+            $products['name'] = $data;
+            $products['description'] = $des[$key];
+            $products["price"] = $price[$key];
+            array_push($productList, $products);
+        }
+
+        $document = new category();
         $document->category = $req->category;
-        $document->pname = json_encode($req->pname);
-        $document->pdes = json_encode($req->pdes);
-        $document->pprice = json_encode($req->pprice);
+        $document->items = json_encode($productList);
         $document->save();
-        return response()->json(["status" => 200, 'message' => "New User Added Successfully"]);
+
+        // dd($product);
+        return redirect()->back();
     }
 }

@@ -16,33 +16,60 @@
 
 
         });
+
         //addding table end
 
         //addding user without refresh
-        getStudent();
 
-        function getStudent() {
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-
-            $.ajax({
-                type: "GET",
-                url: "/",
-                dataType: "Json",
-                success: function(response) {
-                    console.log(response);
-
-                }
-
-            });
-        }
         // addding user without refresh end
 
 
+        //addding user start
+        // $(document).on('click', "#sumbit", function(e) {
+        //     e.preventDefault(); //
+        //     var category = $('#category').val();
+        //     var pname = $('#pname').val();
+        //     var pdes = $('#pdes').val();
+        //     var pprice = $('#pprice').val();
+        //     var csrf = $('input[name="_token"]').val();
+        //     $.post("{{url('/addselection ')}}", {
+
+        //         category: category,
+        //         pname: pname,
+        //         pdes: pdes,
+        //         pprice: pprice,
+        //         _token: csrf
+
+        //     }, function(response) {
+        //         if (response.status == 400) {
+        //             console.log(response.error);
+        //             $('.errordata').html("");
+        //             $('.errordata').addClass("alert alert-danger");
+        //             $.each(response.error, function(index, value) {
+
+        //                 $('.errordata').append('<li>' + value + '</li>')
+        //             })
+        //         } else {
+        //             $('.errordata').html("<div class='alert alert-success close'>" + response.message + "</div>");
+        //             $('#selectionform').trigger('reset');
+        //         }
 
 
+        //     });
+
+
+        // });
+        //addding user end
+
+        //delette
+        // $(document).on('click', '#dataDelete', function(e) {
+        //         e.preventDefault();
+        //         var val_id = $(this).val();
+        //         console.log(val_id);
+
+        //     })
+
+        //     <
+        //     !--
     });
 </script>

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\multiselectionController;
 use App\Http\Controllers\selectionController;
 
 use Illuminate\Support\Facades\Route;
@@ -19,5 +20,13 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+//single selection
 Route::get('/', [selectionController::class, 'fromDb']);
 Route::post('/addselection', [selectionController::class, 'addSelection']);
+Route::get('/deleteitems/{id}', [selectionController::class, 'deleteItems']);
+Route::get('/edititems/{id}', [selectionController::class, 'editItems']);
+Route::post('/updateitem/{id}', [selectionController::class, 'updatefunction']);
+
+
+//multiple selection
+Route::get('/multiselection', [multiselectionController::class, 'multiview']);

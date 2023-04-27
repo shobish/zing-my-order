@@ -12,7 +12,9 @@
                     <div class="formHeader ">
                         <h4 class="text-center py-2">Fill The Form Correctly</h4>
                     </div>
-                    <div class="errordata"></div>
+                    <div class="errordata">
+
+                    </div>
                     <form action="{{url('/addselection')}}" method="post" id="selectionform">
                         @csrf
 
@@ -38,16 +40,13 @@
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <th> <input type="text" name="pname[]" id='pname'> </th>
-                                        <td><input type="text" name="pdes[]" id='pdes'> </td>
-                                        <td><input type="text" name="pprice[]" id='pprice'> </td>
+                                        <th> <input type="text" name="category[0][name]" id='pname'> </th>
+                                        <td><input type="text" name="category[0][description]" id='pdes'> </td>
+                                        <td><input type="text" name="category[0][price]" id='pprice'> </td>
                                         <td><button type="button" class="btn btn-primary" id="add">add </button></td>
                                     </tr>
-
-
                                 </tbody>
                             </table>
-
                         </div>
 
                         <div class="submit py-3">
@@ -60,28 +59,44 @@
                 <table class="table table-dark" id="dataTable">
                     <thead>
                         <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">category</th>
-                            <th scope="col">productName</th>
-                            <th scope="col">productdescription</th>
-                            <th scope="col">productPrice</th>
-                            <th scope="col">Action</th>
+                            <th scope="col">ID</th>
+                            <th scope="col">CATEGORY</th>
+                            <th scope="col">ITEMS</th>                           
+                            <th scope="col">ACTION</th>
 
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($data as $datas)
+                        @foreach( $categories as $items)
+                        <?php $products= json_decode($items->items,true); ?>
+                                         
+                       
                         <tr>
-
-                            <th scope="row">1</th>
-                            <td>{{$datas->category}}</td>
-                            <td>{{$datas->items}}</td>
-
-
-                            <td><a href="#"><button id="dataEdit" class="alert alert-primary">edit</button></a>
-                                <a href="#"><button id="dataDelete" class="alert alert-danger">delete</button></a>
+                            <td>{{$items->id}}</td>
+                            <td>{{$items->category}}</td>   
+                            <td><table class="table table-dark">
+                            <thead>
+                                <tr>                                
+                                <th scope="col">Product name</th>
+                                <th scope="col">Product description</th>
+                                <th scope="col">Product price</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($products as $list)  
+                                <tr>
+                                <td>{{$list['name']}}</td>
+                                <td>{{$list['description']}}</td>
+                                <td>{{$list['price']}}</td>
+                                </tr> 
+                                  @endforeach   
+                            </tbody>
+                            </table></td>
+                            <td><a href="edititems/{{$items->id}}"><button id=" dataEdit" class="alert alert-primary">edit</button></a>
+                                <a href="deleteitems/{{$items->id}}"><button id="dataDelete" class="alert alert-danger">delete</button></a>
                             </td>
                         </tr>
+                     
                         @endforeach
 
                     </tbody>
@@ -89,6 +104,7 @@
             </div>
         </div>
     </div>
+
 </body>
 @include('layout.script')
 

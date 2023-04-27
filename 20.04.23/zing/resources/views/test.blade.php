@@ -1,97 +1,160 @@
- // products = [
- // {
- // pname: 'pname 1',
- // pdescription: 'pdesc 2',
- // price: 123
- // }, {
- // pname: 'pname 2',
- // pdescription: 'pdesc 2',
- // price: 124
- // }
- // ]
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use App\Models\category;
+use Illuminate\Support\Facades\Validator;
+use League\CommonMark\Extension\CommonMark\Node\Block\ListItem;
+use League\CommonMark\Node\Block\Document;
+
+class selectionController extends Controller
+{
+    public $product = [];
+    public $lengthflag = [];
 
 
+    private function extractName($items)
+    {
+        $itemsDecoded = json_decode($items, true);
 
- //addding user start
- $(document).on('click', "#sumbit", function(e) {
- e.preventDefault();
- var name = $('#name').val();
- var address = $('#address').val();
- var category = $('#category').val();
- var pname = $('#pname').val();
- var pdes = $('#pdes').val();
- var pprice = $('#pprice').val();
- var csrf = $('input[name="_token"]').val();
- $.post("{{url('/addselection ')}}", {
- name: name,
- address: address,
- category: category,
- pname: pname,
- pdes: pdes,
- pprice: pprice,
- _token: csrf
+        $names = [];
+        foreach ($itemsDecoded as $item) {
+            $names[] = $item['name'];
+            $description[] = $item['description'];
+            $price[] = $item['price'];
+        }
 
- }, function(response) {
- if (response.status == 400) {
- console.log(response.error);
- $('.errordata').html("");
- $('.errordata').addClass("alert alert-danger");
- $.each(response.error, function(index, value) {
+        return  $names;
+    }
+    private function extractdescription($items)
+    {
+        $itemsDecoded = json_decode($items, true);
+        $description = [];
+        foreach ($itemsDecoded as $item) {
+            $description[] = $item['description'];
+        }
 
- $('.errordata').append('<li>' + value + '</li>')
- })
- } else {
- $('.errordata').html("<div class='alert alert-success close'>" + response.message + "</div>");
- $('#selectionform').trigger('reset');
- }
+        return  $description;
+    }
+    private function extractprice($items)
+    {
+        $itemsDecoded = json_decode($items, true);
+        $price = [];
+        foreach ($itemsDecoded as $item) {
+            $price[] = $item['price'];
+        }
 
+        return  $price;
+    }
 
- });
-
-
- });
- //addding user end
-
-
-
- response()->json(["status" => 200, 'message' => "New User Added Successfully"]);
-
-
+    public function fromDb()
+    {
+        $categories = category::all();
+        $formatted = [];
+        foreach ($categories as $category) {
+            $formatted[] = [
+                $category->id,
+                $category->category,
+                implode(',', $this->extractName($category->items),),
+                implode(',', $this->extractdescription($category->items),),
+                implode(',', $this->extractprice($category->items),)
+            ];
+        }
 
 
+        return view('page.selection', ["formatted" => $formatted]);
+    }
+    public function addSelection(Request $req)
+    {
 
+        $validator = Validator::make($req->all(), [
 
- getStudent();
+            "category" => "required",
+            "pname" => "required",
+            "pdes" => "required",
+            "pprice" => "required",
 
- function getStudent() {
- $.ajaxSetup({
- headers: {
- 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
- }
- });
+        ]);
 
- $.ajax({
- type: "GET",
- url: "/",
- dataType: "Json",
- success: function(response) {
- console.log(response.user);
- $('tbody').html('');
- $.each(response.user, function(index, value) {
- $('tbody').append('<tr id="user-table-row_"' + value.id + '>\
-     <td> ' + value.id + ' </td> \
-     <td>' + value.name + ' </td> \
-     <td> ' + value.address + ' </td> \
-     <td> ' + value.category + ' </td> \
-     <td> ' + value.pname + ' </td> \
-     <td> ' + value.pdes + ' </td> \
-     <td> ' + value.pprice + ' </td> \
-     <td><button class="btn btn-primary edit-btn" value="' + value.id + '">edit</button></td> \
-     <td><button class="btn btn-danger delete-btn" id="btn-delete" value="' + value.id + '">delete</button> </td>\
- </tr> ');
+        if ($validator->fails()) {
+            return response()->json([
+                "status" => 400,
+                "error" => $validator->messages(),
+            ]);
+        }
+        $name = $req->pname;
+        $des = $req->pdes;
+        $price = $req->pprice;
 
- })
- }
+        $productList = [];
+        foreach ($name as $key => $data) {
+            $products = [];
+            $products['name'] = $data;
+            $products['description'] = $des[$key];
+            $products["price"] = $price[$key];
+            array_push($productList, $products);
+        }
 
- });
- }
+        $document = new category();
+        $document->category = $req->category;
+        $document->items = json_encode($productList);
+        $document->save();
+        return response()->json([
+            "status" => 200,
+            "message" => 'successfully added',
+        ]);
+    }
+    public function deleteItems($id)
+    {
+        $item = category::find($id);
+        $item->delete();
+        return response()->json([
+            "status" => 200,
+            "message" => "deleted successfully"
+        ]);
+    }
+    public function editItems($id)
+    {
+        $item = category::find($id);
+        $items = json_decode($item->items);
+        dd($items);
+        return view('page.editSelection', ['item' => $item, 'items' => $items]);
+    }
+    public function updatefunction(Request $req, $id)
+    {
+        $validator = Validator::make($req->all(), [
+            "category" => "required",
+            "pname" => "required",
+            "pdes" => "required",
+            "pprice" => "required",
+
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                "status" => 400,
+                "error" => $validator->messages(),
+            ]);
+        } else {
+            $name = $req->pname;
+            $des = $req->pdes;
+            $price = $req->pprice;
+
+            $productList = [];
+            foreach ($name as $key => $data) {
+                $products = [];
+                $products['name'] = $data;
+                $products['description'] = $des[$key];
+                $products["price"] = $price[$key];
+                array_push($productList, $products);
+            }
+
+            $document = category::find($id);
+            $document->category = $req->category;
+            $document->items = json_encode($productList);
+            $document->update();
+            return response()->json(["status" => 200, 'message' => " User updated Successfully"]);;
+        }
+    }
+}

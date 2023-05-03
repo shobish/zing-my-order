@@ -89,6 +89,7 @@ class selectionController extends Controller
         $document = new category();
         $document->category = $req->category;
         $document->items = json_encode($productList);
+        dd($document->items);
         $document->save();
         return response()->json([
             "status" => 200,

@@ -30,3 +30,4 @@ Route::post('/updateitem/{id}', [selectionController::class, 'updatefunction']);
 
 //multiple selection
 Route::get('/multiselection', [multiselectionController::class, 'multiview']);
+Route::post('/multiselection', [multiselectionController::class, 'saveMultiSelection']);

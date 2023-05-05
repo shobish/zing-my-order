@@ -31,30 +31,46 @@
 @include('pages.productModal')
 @include('layout.footer')
 
+{{-- <script>
+    $(document).ready(function () {
+        $('#data-table').DataTable({
+            "processing": true,
+            "serverSide": true,
+            "ajax":{
+                     "url": "allposts",
+                     "dataType": "json",
+                     "type": "post",
+                     "data":{ _token: "{{csrf_token()}}"}
+                   },
+            "columns": [
+                { "data": "id" },
+                { "data": "name" },
+                { "data": "price" },
+                
+                
+            ]	 
 
-<script>
+        });
+    });
+</script> --}}
+
+  <script>
   $(function(){
-    var table=$('#data-table').DataTable({
-      
+    var table=$('#data-table').DataTable({      
       processing:true,
       serverSide:true,
-      ajax:'table',
+      ajax:'/',
       columns: [
         {data:'id',name:'id'},
         {data:'name',name:'name'},
         {data:'price',name:'price'}
       ]
     });
-  })
-
-  $(document).ready(function() {  
-    
-
-
-
-   
-  
   });
+
+
 </script>
+
+
 </body>
 </html>
